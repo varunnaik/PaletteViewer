@@ -1,49 +1,54 @@
 <html ng-app>
 <head>
-<title>Colour Palette generator</title>
-<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
-<script>
-var ColoursCtrl = function ($scope) {
-	$scope.colours = [];
-	$scope.processColours = function() {
-		$scope.colours = [];
-		var colours = $('#colours').val().split(/[,\s\n]/g);
-		for (var i = 0; i < colours.length; i++) {
-			if (colours[i]) {
-				if (colours[i][0] !== '#') colours[i] = '#'+colours[i];
-				if (colours[i].length !== 7) continue;
-				if ()
-				$scope.colours.push(colours[i]);
-				
-			}
-		}
-	}
-	
-}
-</script>
-<style>
-.colour {
-	width: 60px;
-	height: 30px;
-	border: 1px solid #666;
-	float: left;
-	margin-top: -1px; /* Hide borders */
-	margin-left: -1px;
-}
-textarea {
-	width: 100%;
-	height: 4em;
-}
-</style>
+    <title>Colour Palette generator</title>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+    <script>
+        var ColoursCtrl = function ($scope) {
+            $scope.colours = [];
+            $scope.processColours = function () {
+                $scope.colours = [];
+
+                // Read in the hex values pasted in
+                var colours = $('#colours').val().split(/[,\s\n]/g);
+                for (var i = 0; i < colours.length; i++) {
+                    if (colours[i]) {
+                        if (colours[i][0] !== '#') colours[i] = '#' + colours[i];
+                        if (colours[i].length !== 7) continue;
+                        if (! /^[a-fA-F0-9]*$/.test(colours[i].substring(1))) continue; // Not a hex colour
+                            $scope.colours.push(colours[i]);
+
+                    }
+                }
+            }
+
+        }
+    </script>
+    <style>
+        .colour {
+            width: 90px;
+            height: 35px;
+            border: 1px solid #323232;
+            float: left;
+            margin-top: -1px; /* Hide borders */
+            margin-left: -1px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 4em;
+        }
+    </style>
 </head>
 <body ng-controller="ColoursCtrl">
-	<h1>Colour Palette Viewer</h1>
+<h1>Colour Palette Viewer</h1>
 <textarea id="colours" placeholder="Paste your Hex colours here"></textarea>
 <button ng-click="processColours()">Show palette</button>
-<h5 ng-show="colours.length > 0">Found {{ colours.length }} colours.</h5>
+<hr />
+<h4 ng-show="colours.length > 0">Found {{ colours.length }} colours.</h4>
+
 <div id="colourPalette">
-<div class="colour" ng-repeat="colour in colours" style="background: {{ colour }}">
-<span style="display: none">{{colour}}</span>
-</div>
+    <div class="colour" ng-repeat="colour in colours" style="background: {{ colour }}">
+        <span style="display: none">{{colour}}</span>
+    </div>
 </div>
