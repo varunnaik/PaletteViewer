@@ -1,10 +1,11 @@
-<html ng-app>
+<html ng-app="palette">
 <head>
     <title>Colour Palette generator</title>
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
     <script>
-        var ColoursCtrl = function ($scope) {
+        angular.module('palette', [])
+        .controller('ColoursCtrl', function ($scope) {
             $scope.colours = [];
             $scope.processColours = function () {
                 $scope.colours = [];
@@ -15,16 +16,35 @@
                     if (colours[i]) {
                         if (colours[i][0] !== '#') colours[i] = '#' + colours[i];
                         if (colours[i].length !== 7) continue;
-                        if (! /^[a-fA-F0-9]*$/.test(colours[i].substring(1))) continue; // Not a hex colour
-                            $scope.colours.push(colours[i]);
+                        if (!/^[a-fA-F0-9]*$/.test(colours[i].substring(1))) continue; // Not a hex colour
+                        $scope.colours.push(colours[i]);
 
                     }
                 }
             }
 
-        }
+        })
+        .directive('showHover', function () {
+            return {
+                restrict: 'A',
+                link: function (scope, element) {
+                    element.hover(function () {
+                        element.find('span').show();
+                    });
+                    element.mouseleave(function ($event) {
+                        element.find('span').hide();
+                    })
+                }
+            }
+
+        });
+
     </script>
     <style>
+        body {
+            font-family: "Helvetica Neue", "Liberation Sans", "Droid Sans", "Lucida Sans Unicode", sans-serif;
+        }
+
         .colour {
             width: 90px;
             height: 35px;
@@ -32,6 +52,15 @@
             float: left;
             margin-top: -1px; /* Hide borders */
             margin-left: -1px;
+            text-align: center;
+        }
+        .colour span {
+            text-shadow: 0 0 1px #fff;
+            color: #000;
+            font-size: 13px;
+            padding-top: 10px;
+            display: inline-block;
+            text-decoration: underline;
         }
 
         textarea {
@@ -44,11 +73,11 @@
 <h1>Colour Palette Viewer</h1>
 <textarea id="colours" placeholder="Paste your Hex colours here"></textarea>
 <button ng-click="processColours()">Show palette</button>
-<hr />
+<hr/>
 <h4 ng-show="colours.length > 0">Found {{ colours.length }} colours.</h4>
 
 <div id="colourPalette">
-    <div class="colour" ng-repeat="colour in colours" style="background: {{ colour }}">
+    <div class="colour" ng-repeat="colour in colours" style="background: {{ colour }}" show-hover>
         <span style="display: none">{{colour}}</span>
     </div>
 </div>

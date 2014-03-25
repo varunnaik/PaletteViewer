@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="681afeb5-5bc4-4a88-b5e2-d7e15b89a4a5" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/palette.html" afterPath="$PROJECT_DIR$/palette.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="palette.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -28,7 +29,7 @@
       <file leaf-file-name="palette.html" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/palette.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="29" column="22" selection-start="1104" selection-end="1104" vertical-scroll-proportion="0.144" vertical-offset="432" max-vertical-offset="1080">
+            <state line="29" column="49" selection-start="1213" selection-end="1213" vertical-scroll-proportion="0.23529412" vertical-offset="378" max-vertical-offset="1602">
               <folding />
             </state>
           </provider>
@@ -204,7 +205,7 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/palette.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="22" selection-start="1104" selection-end="1104" vertical-scroll-proportion="0.144" vertical-offset="432" max-vertical-offset="1080">
+        <state line="29" column="49" selection-start="1213" selection-end="1213" vertical-scroll-proportion="0.23529412" vertical-offset="378" max-vertical-offset="1602">
           <folding />
         </state>
       </provider>
