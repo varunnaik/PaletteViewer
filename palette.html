@@ -67,6 +67,19 @@
             width: 100%;
             height: 4em;
         }
+        #selectedColours {
+			clear: both;
+			border: 1px solid #999;
+			max-width: 100%;
+			padding: 20px;
+			margin-top: 20px;
+		}
+		#pre {
+			white-space: pre-line;
+			background: #f8f8f8;
+			padding: 20px;
+			border: 1px solid #e9e9e9;
+		}
     </style>
 </head>
 <body ng-controller="ColoursCtrl">
@@ -81,3 +94,14 @@
         <span style="display: none">{{colour}}</span>
     </div>
 </div>
+<div id="selectedColours" ng-show="colours.length > 0">
+	<h2>Selected Colours</h2>
+	<input type="checkbox" ng-model="arrayFormat"/>Show in Javascript Array Format<br />
+	<input type="checkbox" ng-model="oneLine"/>Show all on one line<br />
+	
+	<div id="pre">
+<span ng-repeat="colour in colours">{{ (arrayFormat)? '"': ''}}{{colour}}{{(arrayFormat)? '",':'' }} {{ (oneLine)? '':'\n' }}</span>
+	</div>
+</div>
+</body>
+</html>
