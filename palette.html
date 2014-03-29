@@ -26,6 +26,16 @@
             $scope.remove = function(index) {
 				$scope.removedColours.push($scope.colours.splice(index,1));
 			}
+            $scope.calculateInverse = function(colour) {
+                colour = colour.substring(1); // Remove #
+
+                console.log(colour.substring(0,2),colour.substring(2,2),colour.substring(4,2), colour)
+                var r = 255 - parseInt(colour.substring(0,2), 16);
+                var g = 255 - parseInt(colour.substring(2,4), 16);
+                var b = 255 - parseInt(colour.substring(4,6), 16);
+
+                return "rgb("+r+","+g+","+b+")";
+            }
 
         })
         .directive('showHover', function () {
@@ -59,8 +69,6 @@
             text-align: center;
         }
         .colour span {
-            text-shadow: 0 0 1px #fff;
-            color: #000;
             font-size: 13px;
             padding-top: 10px;
             display: inline-block;
@@ -97,7 +105,7 @@
 <p>Click on a colour to remove it.</p>
 <div id="colourPalette">
     <div class="colour" ng-repeat="colour in colours" style="background: {{ colour }}" show-hover ng-click="remove($index)">
-        <span style="display: none">{{colour}}</span>
+        <span style="display: none; color: {{ calculateInverse(colour) }}">{{colour}}</span>
     </div>
 </div>
 <div id="selectedColours" ng-show="colours.length > 0">
