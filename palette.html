@@ -98,7 +98,6 @@
                 $scope.colours = tmpColours;
                 $scope.$apply();
             }
-            /* How to sort colours: http://www.runtime-era.com/2011/11/grouping-html-hex-colors-by-hue-in.html */
         })
         .directive('showHover', function () {
             return {
@@ -146,6 +145,7 @@
             margin-top: -1px; /* Hide borders */
             margin-left: -1px;
             text-align: center;
+            position: relative;
         }
         .colour span {
             font-size: 13px;
@@ -160,7 +160,6 @@
 		}
         textarea {
             width: 100%;
-            height: 4em;
         }
         #selectedColours {
 			clear: both;
@@ -181,21 +180,30 @@
             margin-top: 3px;
             font-family: monospace;
 		}
+        strong {
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            cursor: pointer;
+            line-height: 10px;
+        }
+        strong:after {
+            content: "x"
+        }
     </style>
 </head>
 <body ng-controller="ColoursCtrl">
 <h1>Colour Palette Viewer</h1>
-<p>Type or paste colour values (in six digit hex format, i.e., #ffffff) into the textbox to preview, sort, edit the palette, and copy the final palette below.</p>
-<textarea id="colours" placeholder="Paste your Hex colours here"></textarea>
+<p>Type or paste colour values (in six digit hex format, i.e., #ffffff) into the textbox below. You can then preview and sort the palette, remove un-necessary colours, and copy the final palette in Javascript array format below.</p>
+<textarea id="colours" placeholder="Paste your Hex colours here" rows="8"></textarea>
 <button ng-click="processColours()">Show palette</button>
 <hr/>
 <div ng-show="colours.length > 0">
 <h4>Found {{ colours.length }} colours.</h4>
-<p>Click on a colour to remove it.</p>
     <input id="sortColours" type="checkbox" sort-colours /><label for="sortColours">Sort Colours</label>
 <div id="colourPalette">
-    <div class="colour" ng-repeat="colour in colours" style="background: {{ colour }}" show-hover ng-click="remove($index)">
-        <span style="display: none; color: {{ calculateInverse(colour) }}">{{colour}}</span>
+    <div class="colour" ng-repeat="colour in colours" style="background: {{ colour }}" show-hover ng-click="copy($index)">
+        <span style="display: none; color: {{ calculateInverse(colour) }}">{{colour}}<strong ng-click="remove($index)" title="Delete this colour"></strong></span>
     </div>
 </div>
 <div id="selectedColours" ng-show="colours.length > 0">
