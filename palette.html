@@ -27,13 +27,17 @@
 				$scope.removedColours.push($scope.colours.splice(index,1));
 			}
             $scope.calculateInverse = function(colour) {
+                // Calculate the colour for text that best contrasts with this colour
+                // Returns either 'black' or 'white'
+                /* See http://24ways.org/2010/calculating-color-contrast/ */
                 colour = colour.substring(1); // Remove #
 
-                var r = 255 - parseInt(colour.substring(0,2), 16);
-                var g = 255 - parseInt(colour.substring(2,4), 16);
-                var b = 255 - parseInt(colour.substring(4,6), 16);
+                var r = parseInt(colour.substring(0,2), 16);
+                var g = parseInt(colour.substring(2,4), 16);
+                var b = parseInt(colour.substring(4,6), 16);
 
-                return "rgb("+r+","+g+","+b+")";
+                var yiq = ((r*299)+(g*587)+(b*114))/1000;
+                return (yiq >= 128) ? 'black' : 'white';
             }
             $scope.sortColours = function() {
                 // Sort the colours array by HSV
@@ -53,8 +57,10 @@
                     var g = parseInt(colour.substring(2,4),16)/255;
                     var b = parseInt(colour.substring(4,6),16)/255;
 
-                    var max = [g,b].reduce(function(a,b) {return Math.max(a,b)}, r);
-                    var min = [g,b].reduce(function(a,b) {return Math.min(a,b)}, r);
+                    //var max = [g,b].reduce(function(a,b) {return Math.max(a,b)}, r);
+                    //var min = [g,b].reduce(function(a,b) {return Math.min(a,b)}, r);
+                    var max = Math.max.apply(Math, [r,g,b]);
+                    var min = Math.min.apply(Math, [r,g,b]);
 
                     /* Variables for HSV value of hex color. */
                     var chr = max-min;
@@ -83,10 +89,9 @@
                     tmpColours[i].sat = sat;
                     tmpColours[i].val = val;
                 }
-                tmpColours.sort(function(a,b){
+                tmpColours.sort(function(a,b) {
                     return a.hue - b.hue;
                 });
-                console.log("SORTED!");
                 for (var i = 0; i < tmpColours.length; i++) {
                     tmpColours[i] = tmpColours[i].value;
                 }
@@ -180,23 +185,23 @@
 </head>
 <body ng-controller="ColoursCtrl">
 <h1>Colour Palette Viewer</h1>
-<p>Type or paste colour values (in six digit hex format, i.e., #ffffff), preview, sort, and edit the palette, and copy the final palette below.</p>
+<p>Type or paste colour values (in six digit hex format, i.e., #ffffff) into the textbox to preview, sort, edit the palette, and copy the final palette below.</p>
 <textarea id="colours" placeholder="Paste your Hex colours here"></textarea>
 <button ng-click="processColours()">Show palette</button>
 <hr/>
 <div ng-show="colours.length > 0">
 <h4>Found {{ colours.length }} colours.</h4>
 <p>Click on a colour to remove it.</p>
-    <input type="checkbox" sort-colours />Sort Colours
+    <input id="sortColours" type="checkbox" sort-colours /><label for="sortColours">Sort Colours</label>
 <div id="colourPalette">
     <div class="colour" ng-repeat="colour in colours" style="background: {{ colour }}" show-hover ng-click="remove($index)">
         <span style="display: none; color: {{ calculateInverse(colour) }}">{{colour}}</span>
     </div>
 </div>
 <div id="selectedColours" ng-show="colours.length > 0">
-	<h2>Selected Colours</h2>
-	Options: &nbsp;<input type="checkbox" ng-model="arrayFormat"/>Show in Javascript Array Format&nbsp;
-	<input type="checkbox" ng-model="oneLine"/>Show all on one line<br />
+	<h2>Selected Colours ({{colours.length}})</h2>
+	Options: &nbsp;<input type="checkbox" ng-model="arrayFormat" id="arrayFormat"/><label for="arrayFormat">Show in Javascript Array Format</label>&nbsp;
+	<input type="checkbox" ng-model="oneLine" id="oneLine"/><label for="oneLine">Show all on one line</label><br />
 	
 	<div id="pre">
         <span ng-repeat="colour in colours">{{ (arrayFormat)? '"': ''}}{{colour}}{{(arrayFormat)? '",':'' }} {{ (oneLine)? '':'\n' }}</span>
