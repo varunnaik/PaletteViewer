@@ -1,6 +1,6 @@
 <html ng-app="palette">
 <head>
-    <title>Colour Palette generator</title>
+    <title>Palette Viewer</title>
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
     <script>
@@ -196,8 +196,8 @@
     </style>
 </head>
 <body ng-controller="ColoursCtrl">
-<h1>Colour Palette Viewer</h1>
-<p>Type or paste colour values (in six digit hex format, i.e., #ffffff) into the textbox below. You can then preview and sort the palette, remove un-necessary colours, and copy the final palette in Javascript array format below.</p>
+<h1>Palette Viewer</h1>
+<p>Type or paste colour values (in six digit hex format, i.e., #ffffff) into the textbox below. You can then preview and sort the palette, remove un-necessary colours, and copy the final palette in Javascript array format below. <a href="https://github.com/varunnaik/PaletteViewer" title="Palette Viewer on Github">View project on Github</a></p>
 <textarea id="colours" placeholder="Paste your Hex colours here" rows="8"></textarea>
 <button ng-click="processColours()">Show palette</button>
 <hr/>
