@@ -3,6 +3,7 @@
     <title>Palette Viewer</title>
     <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <script>
         angular.module('palette', [])
         .controller('ColoursCtrl', function ($scope) {
@@ -10,6 +11,7 @@
             $scope.removedColours = [];
             $scope.unsortedColours = [];
             $scope.addedColours = {}; // Used to filter duplicates
+            $scope.pristineInput = true;
             $scope.processColours = function () {
                 $scope.colours = [];
                 $scope.addedColours = {};
@@ -23,12 +25,13 @@
                         if (typeof $scope.addedColours[colours[i]] !== 'undefined') continue; // Filter duplicates
                         $scope.colours.push(colours[i]);
                         $scope.addedColours[colours[i]] = true;
+                        $scope.pristineInput = true;
                     }
                 }
             };
             $scope.remove = function(index) {
 				$scope.removedColours.push($scope.colours.splice(index,1));
-			}
+			};
             $scope.calculateInverse = function(colour) {
                 // Calculate the colour for text that best contrasts with this colour
                 // Returns either 'black' or 'white'
@@ -41,7 +44,7 @@
 
                 var yiq = ((r*299)+(g*587)+(b*114))/1000;
                 return (yiq >= 128) ? 'black' : 'white';
-            }
+            };
             $scope.sortColours = function() {
                 // Sort the colours array by HSV
                 // http://www.runtime-era.com/2011/11/grouping-html-hex-colors-by-hue-in.html
@@ -128,6 +131,18 @@
                     });
                 }
             }
+        }).directive('watchChange',function() {
+            return {
+                restrict: 'A',
+                link: function (scope, element) {
+                    element.bind('input propertychange', function() {
+                        if (scope.colours.length > 0) {
+                            scope.pristineInput = false;
+                        }
+                        scope.$apply();
+                    });
+                }
+            }
         });
 
     </script>
@@ -193,13 +208,16 @@
         strong:after {
             content: "x"
         }
+        .show-palette-button {
+            margin-top: 3px;
+        }
     </style>
 </head>
-<body ng-controller="ColoursCtrl">
+<body ng-controller="ColoursCtrl" class="col-lg-12">
 <h1>Palette Viewer</h1>
 <p>Type or paste colour values (in six digit hex format, i.e., #ffffff) into the textbox below. You can then preview and sort the palette, remove un-necessary colours, and copy the final palette in Javascript array format below. <a href="https://github.com/varunnaik/PaletteViewer" title="Palette Viewer on Github">View project on Github</a></p>
-<textarea id="colours" placeholder="Paste your Hex colours here" rows="8"></textarea>
-<button ng-click="processColours()">Show palette</button>
+<textarea class="form-control" id="colours" placeholder="Paste your Hex colours here" rows="8" watch-change></textarea>
+<button class="show-palette-button btn {{ (pristineInput)? 'btn-success':'btn-warning'  }}" ng-click="processColours()"><span ng-show="pristineInput">Show palette</span><span ng-show="!pristineInput">Click to refresh palette</span></button>
 <hr/>
 <div ng-show="colours.length > 0">
 <h4>Found {{ colours.length }} colours.</h4>
