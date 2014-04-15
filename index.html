@@ -8,24 +8,39 @@
         angular.module('palette', [])
         .controller('ColoursCtrl', function ($scope) {
             $scope.colours = [];
+            $scope.invalidColours = [];
+            $scope.duplicateColours = [];
             $scope.removedColours = [];
             $scope.unsortedColours = [];
             $scope.addedColours = {}; // Used to filter duplicates
             $scope.pristineInput = true;
+            $scope.parsed = false;
             $scope.processColours = function () {
                 $scope.colours = [];
+                $scope.invalidColours = [];
+                $scope.duplicateColours = [];
                 $scope.addedColours = {};
                 // Read in the hex values pasted in
                 var colours = $('#colours').val().replace(/["']/g, "").split(/[,\s\n]/g);
                 for (var i = 0; i < colours.length; i++) {
                     if (colours[i]) {
                         if (colours[i][0] !== '#') colours[i] = '#' + colours[i];
-                        if (colours[i].length !== 7) continue;
-                        if (!/^[a-fA-F0-9]*$/.test(colours[i].substring(1))) continue; // Not a hex colour
-                        if (typeof $scope.addedColours[colours[i]] !== 'undefined') continue; // Filter duplicates
+                        if (colours[i].length !== 7) {
+                            $scope.invalidColours.push(colours[i]);
+                            continue;
+                        }
+                        if (!/^[a-fA-F0-9]*$/.test(colours[i].substring(1))) {
+                            $scope.invalidColours.push(colours[i]);
+                            continue;
+                        } // Not a hex colour
+                        if (typeof $scope.addedColours[colours[i]] !== 'undefined') {
+                            $scope.duplicateColours.push(colours[i]);
+                            continue; // Filter duplicates
+                        }
                         $scope.colours.push(colours[i]);
                         $scope.addedColours[colours[i]] = true;
                         $scope.pristineInput = true;
+                        $scope.parsed = true;
                     }
                 }
             };
@@ -215,12 +230,12 @@
 </head>
 <body ng-controller="ColoursCtrl" class="col-lg-12">
 <h1>Palette Viewer</h1>
-<p>Type or paste colour values (in six digit hex format, i.e., #ffffff) into the textbox below. You can then preview and sort the palette, remove un-necessary colours, and copy the final palette in Javascript array format below. <a href="https://github.com/varunnaik/PaletteViewer" title="Palette Viewer on Github">View project on Github</a></p>
+<p>Type or paste colour values (in six digit hex format, e.g., #ffffff) into the textbox below. You can then preview and sort the palette, remove un-necessary colours, and copy the final palette in Javascript array format below. <a href="https://github.com/varunnaik/PaletteViewer" title="Palette Viewer on Github">View project on Github</a></p>
 <textarea class="form-control" id="colours" placeholder="Paste your Hex colours here" rows="8" watch-change></textarea>
 <button class="show-palette-button btn {{ (pristineInput)? 'btn-success':'btn-warning'  }}" ng-click="processColours()"><span ng-show="pristineInput">Show palette</span><span ng-show="!pristineInput">Click to refresh palette</span></button>
 <hr/>
+<h4 ng-show="parsed">Found {{ colours.length }} colours.<span ng-show="invalidColours"> Rejected {{ invalidColours.length }} invalid colours.</span><span ng-show="duplicateColours"> Ignoring {{ duplicateColours.length }} duplicate colours.</span></h4>
 <div ng-show="colours.length > 0">
-<h4>Found {{ colours.length }} colours.</h4>
     <input id="sortColours" type="checkbox" sort-colours /><label for="sortColours">Sort Colours</label><br />
 <div id="colourPalette">
     <div class="colour" ng-repeat="colour in colours" style="background: {{ colour }}" show-hover ng-click="copy($index)">
